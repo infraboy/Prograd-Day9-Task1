@@ -1,16 +1,83 @@
-let noOfPosts = 0
-let id = null
+let id=null
+class Blog {
 
-const resetPopup = () => {
-    id = null
-    const blogTitle = document.getElementById("title")
-    const blogDescription = document.getElementById("detail")
-    blogTitle.value = null
-    blogDescription.value = null
+    constructor(title, details, noOfPosts){
+        this.title=title
+        this.detail=details
+        this.noOfPosts=noOfPosts
+    }
+
+    resetPopup = () => {
+        id = null
+        this.title.value = null
+        this.detail.value = null
+    }
+
+    addTitle = (h1, post) => {
+        
+        h1.textContent = this.title.value
+        post.appendChild(h1)
+    }
+
+    addDetails = (p1, post) => {
+        
+        p1.textContent = this.detail.value
+        post.appendChild(p1)
+
+        let p2 = document.createElement("p")
+        const currDate = new Date()
+        p2.textContent = `Posted on: ${currDate.getDate()}/${currDate.getMonth()}/${currDate.getFullYear()} ${currDate.getHours()}h:${currDate.getMinutes()}m`
+        post.appendChild(p2)
+    }
+
+
+    addBlog = () => {
+        let h1 = document.createElement("h1")
+        let p1 = document.createElement("p")
+        let post = document.createElement("div")
+        post.className = "article-card"
+        this.noOfPosts++
+        post.id = id == null ? "flashcard" + noOfPosts : id
+
+        let img = document.createElement("img")
+        img.src = "assets/java card image.svg"
+        post.appendChild(img)
+    
+        this.addTitle(h1, post)
+        this.addDetails(p1, post)
+
+        let buttons = document.createElement("div")
+        buttons.className = "card-buttons"
+    
+        let edit = document.createElement("button")
+        edit.className = "edit"
+        edit.textContent = "Edit"
+        edit.onclick = () => {
+            id = post.id
+            this.title.value = h1.textContent
+            this.detail.value = p1.textContent
+            document.getElementById("popupContact").style.display = "flex"
+        }
+        buttons.appendChild(edit)
+
+        let del = document.createElement("button")
+        del.className = "delete"
+        del.textContent = "Delete"
+        del.onclick = () => {
+            post.remove()
+        }
+        buttons.appendChild(del)
+
+        post.appendChild(buttons)
+        return post
+    }
+
 }
 
+
+let noOfPosts = 0;
 window.onload = () => {
-    
+    const posts = document.querySelector(".body-div2")
     document.getElementById("addBlog").onclick = () => {
         document.getElementById("popupContact").style.display = "flex"
     }
@@ -23,61 +90,18 @@ window.onload = () => {
     }
     
     document.getElementById("post").onclick = () => {
-        const posts = document.querySelector(".body-div2")
         const blogTitle = document.getElementById("title")
         const blogDescription = document.getElementById("detail")
-    
-        let post = document.createElement("div")
-        post.className = "article-card"
-        noOfPosts++
-        post.id = id == null ? "flashcard" + noOfPosts : id
-    
-        let img = document.createElement("img")
-        img.src = "assets/java card image.svg"
-        post.appendChild(img)
-    
-        let h1 = document.createElement("h1")
-        h1.textContent = blogTitle.value
-        post.appendChild(h1)
         
-        let p1 = document.createElement("p")
-        p1.textContent = blogDescription.value
-        post.appendChild(p1)
+        noOfPosts++;
+        const BG = new Blog(blogTitle,blogDescription,noOfPosts)
+        let post=BG.addBlog()
 
-        let p2 = document.createElement("p")
-        const currDate = new Date()
-        p2.textContent = `Posted on: ${currDate.getDate()}/${currDate.getMonth()}/${currDate.getFullYear()} ${currDate.getHours()}h:${currDate.getMinutes()}m`
-        post.appendChild(p2)
-        
-        let buttons = document.createElement("div")
-        buttons.className = "card-buttons"
-    
-        let edit = document.createElement("button")
-        edit.className = "edit"
-        edit.textContent = "Edit"
-        edit.onclick = () => {
-            id = post.id
-            blogTitle.value = h1.textContent
-            blogDescription.value = p1.textContent
-            document.getElementById("popupContact").style.display = "flex"
-        }
-        buttons.appendChild(edit)
-    
-        let del = document.createElement("button")
-        del.className = "delete"
-        del.textContent = "Delete"
-        del.onclick = () => {
-            post.remove()
-        }
-        buttons.appendChild(del)
-    
-        post.appendChild(buttons)
-    
         if(id == null){
             posts.appendChild(post)
         } else {
             posts.replaceChild(post, document.getElementById(id))
-            resetPopup()
+            BG.resetPopup()
         }
         document.getElementById("popupContact").style.display = "none"
     }
