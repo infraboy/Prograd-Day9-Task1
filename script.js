@@ -40,9 +40,14 @@ window.onload = () => {
         h1.textContent = blogTitle.value
         post.appendChild(h1)
         
-        let p = document.createElement("p")
-        p.textContent = blogDescription.value
-        post.appendChild(p)
+        let p1 = document.createElement("p")
+        p1.textContent = blogDescription.value
+        post.appendChild(p1)
+
+        let p2 = document.createElement("p")
+        const currDate = new Date()
+        p2.textContent = `Posted on: ${currDate.getDate()}/${currDate.getMonth()}/${currDate.getFullYear()} ${currDate.getHours()}h:${currDate.getMinutes()}m`
+        post.appendChild(p2)
         
         let buttons = document.createElement("div")
         buttons.className = "card-buttons"
@@ -53,7 +58,7 @@ window.onload = () => {
         edit.onclick = () => {
             id = post.id
             blogTitle.value = h1.textContent
-            blogDescription.value = p.textContent
+            blogDescription.value = p1.textContent
             document.getElementById("popupContact").style.display = "flex"
         }
         buttons.appendChild(edit)
